@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
             name: 'nike',
             price: 500
         }
-    })
+    });
 });
 
 
@@ -22,11 +22,28 @@ router.get('/:idCategory/products/:idProduct', (req, res) => {
 
 router.post('/', (req, res) => {
     const body = req.body;
-    res.json({
+    res.status(201).json({
         message: 'category created',
         data: body
-    })
-})
+    });
+});
 
+router.patch('/:id', (req, res) => {
+    const body = req.body;
+    const { id } = req.params;
+    res.json({
+        message: 'category created',
+        data: body,
+        id
+    });
+});
+
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+    res.json({
+        message: 'deleted',
+        id
+    });
+});
 
 module.exports = router;

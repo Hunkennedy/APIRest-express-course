@@ -1,27 +1,18 @@
 const express = require('express');
 const app = express();
+const routerApi = require('./routes/index');
 const port = 4040;
 
+app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send('home');
-});
-
-app.get('/categories', (req, res) => {
-    res.json({
-        name: 'shoes',
-        products: {
-            name: 'nike',
-            price: 500
-        }
-    })
+    res.send('hello');
 })
 
-app.get('/products', (req, res) => {
-    res.json({
-        name: 'product1',
-        price: 30
-    });
-});
+routerApi(app); //-->routes/index
 
-app.listen(port);
+
+app.listen(port, () => {
+    // eslint-disable-next-line no-console
+    console.log(`http://localhost:${port}`);
+});

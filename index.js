@@ -3,7 +3,7 @@ const app = express();
 const routerApi = require('./routes/index');
 const { logErrors, errorHandler, boomErrorHandler } = require('./middlewares/error.handler');
 const cors = require('cors');
-const port = 4040;
+const port = process.env.PORT || 4040;
 
 app.use(express.json());
 app.use(cors());

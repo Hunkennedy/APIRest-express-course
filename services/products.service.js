@@ -20,24 +20,43 @@ class ProductService {
     }
     }
 
-    create() {
-
+    async create(data) {
+      const newProduct = {
+        id: faker.datatype.uuid(),
+        ...data
+      }
+      this.products.push(newProduct);
+      return newProduct;
     }
 
-    find() {
+    async find() {
         return this.products;
     }
 
-    findProd(id) {
+    async findProd(id) {
         return this.products.find(item => item.id === id);
     }
 
-    update() {
-        
+    async update(id, changes) {
+      const index = this.products.findIndex(item => item.id === id);
+      if (index === -1) {
+        throw new Error('Product not found');
+      }
+      const product = this.products[index];
+      this.products[index] = {
+        ...product,
+        ...changes
+      };
+      return this.products[index];
     }
 
-    delete() {
-
+    async delete(id) {
+      const index = this.products.findIndex(item => item.id === id);
+      if (index === -1) {
+        throw new Error('Product not found');
+      }
+      this.products.slice(index,1);
+      return {message:`deleted ${index}`}
     }
 
 }

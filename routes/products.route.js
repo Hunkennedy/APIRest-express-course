@@ -9,12 +9,8 @@ const service = new ProductService();
 //>>get methods
 router.get('/', (req, res) => {
     const products = service.find();
-    
-    res.json(products);
-});
 
-router.get('/filter', (req, res) => {
-    res.json({ message: 'filter-page' });
+    res.json(products);
 });
 
 router.get('/:id', (req, res) => {
@@ -25,28 +21,23 @@ router.get('/:id', (req, res) => {
 //>>post method
 router.post('/', (req, res) => {
     const body = req.body;
-    res.status(201).json({
-        message: 'created',
-        data: body
-    });
+    const newProduct = service.create(body);
+    res.status(201).json(newProduct);
 });
 
+//>>patch metho
 router.patch('/:id', (req, res) => {
     const body = req.body;
     const { id } = req.params;
-    res.status(204).json({
-        message: 'updated',
-        data: body,
-        id
-    });
+    const product = service.update(id,body);
+    res.status(204).json(product);
 });
 
+// >>delete method
 router.delete('/:id', (req, res) => {
     const { id } = req.params;
-    res.json({
-        message: 'deleted',
-        id
-    });
+    const product = service.delete(id)
+    res.json(product);
 })
 
 module.exports = router;

@@ -1,22 +1,15 @@
-const faker = require('faker');
 const router = require('express').Router();
+const ProductService = require('../services/products.service');
+
+
+const service = new ProductService();
 
 
 
 //>>get methods
-
-
 router.get('/', (req, res) => {
-    const products = [];
-    const { size } = req.query;
-    const limit = size || 10;
-    for (let i = 0; i < limit; i++) {
-        products.push({
-            name: faker.commerce.productName(),
-            price: parseInt(faker.commerce.price()),
-            image: faker.image.imageUrl()
-        });
-    }
+    const products = service.find();
+    
     res.json(products);
 });
 
@@ -26,11 +19,7 @@ router.get('/filter', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-    res.json({
-        id,
-        name: 'product1',
-        price: 30
-    });
+    res.json(service.findProd(id));
 });
 
 //>>post method
@@ -45,7 +34,7 @@ router.post('/', (req, res) => {
 router.patch('/:id', (req, res) => {
     const body = req.body;
     const { id } = req.params;
-    res.json({
+    res.status(204).json({
         message: 'updated',
         data: body,
         id

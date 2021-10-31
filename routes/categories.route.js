@@ -1,23 +1,19 @@
 
 const router = require('express').Router();
+const CategoriesService = require('../services/categories.service');
 
+const service = new  CategoriesService();
 
 
 router.get('/', (req, res) => {
-    res.json({
-        id: 1,
-        name: 'shoes',
-        products: {
-            name: 'nike',
-            price: 500
-        }
-    });
+    const categories = service.get();
+    res.json(categories);
 });
 
 
-router.get('/:idCategory/products/:idProduct', (req, res) => {
-    const { idCategory, idProduct } = req.params;
-    res.json({ idCategory, idProduct });
+router.get('/:id', (req, res) => {
+    const { id } = req.params;
+    res.json(service.getCategory(id));
 });
 
 router.post('/', (req, res) => {
@@ -31,7 +27,7 @@ router.post('/', (req, res) => {
 router.patch('/:id', (req, res) => {
     const body = req.body;
     const { id } = req.params;
-    res.json({
+    res.status(204).json({
         message: 'category created',
         data: body,
         id

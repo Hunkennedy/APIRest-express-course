@@ -1,4 +1,5 @@
 const faker = require('faker');
+const boom = require('@hapi/boom');
 
 class UsersService {
 
@@ -11,8 +12,10 @@ class UsersService {
         const limit = 100;
         for (let i = 0; i < limit; i++) {
             this.users.push({
+                id: faker.datatype.uuid(),
                 name: faker.name.findName(),
-                lastname: faker.name.lastName()
+                lastname: faker.name.lastName(),
+                isBlock: faker.datatype.boolean()
             });
         }
     }
@@ -22,7 +25,14 @@ class UsersService {
     }
 
     async findUser(id) {
-        return this.users.find(item => item.id === id);
+        const user = this.users.find(item => item.id === id);
+        if (!user) {
+            throw boom.notFound('user not found');
+        }
+        if(!user.isBlock) {
+            throw boom.conflict('not allowed');
+        }
+        return user;
     }
 
     async create(data) {
@@ -37,7 +47,7 @@ class UsersService {
     async update(id, changes) {
       const index = this.users.findIndex(item => item.id === id);
       if (index === -1) {
-        throw new Error('user not found');
+        throw boom.notFound('user not found');
       }
 
       const user = this.users[index];
@@ -45,13 +55,13 @@ class UsersService {
         ...user,
         ...changes
       }
-      return this.users[index];
+      return user;
     }
 
     async delete(id) {
       const index = this.users.findIndex(item => item.id === id);
       if (index === -1) {
-        throw new Error('user not found');
+        throw boom.notFound('user not found');
       }
       this.users.splice(index,1);
       return {message:'user deleted'}
